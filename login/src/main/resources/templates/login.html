@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+</head>
+<body>
+    <div style="margin:100px auto ;padding:20px 10px;
+    text-align:center;width: 500px;box-shadow: 2px 2px 10px #000000;border-radius: 5px;">
+        <h3>欢迎登录架构测试平台</h3>
+        <span style="color: red" th:utext="${msg}" ></span>
+        <form method="post" action="/login">
+            <div style="margin-top: 10px; ">
+                <label>
+                    用户名:<input name="username" type="text" required>
+                </label>
+            </div>
+            <div style="margin-top: 10px;">
+                <label>
+                    密 码:<input name="pwd" type="password" required>
+                </label>
+            </div>
+            <div style="margin-top: 10px;">
+                <input type="submit" value="登录">
+            </div>
+        </form>
+    </div>
+</body>
+</html>
