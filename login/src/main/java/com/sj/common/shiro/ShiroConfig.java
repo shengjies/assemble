@@ -44,10 +44,13 @@ public class ShiroConfig {
         filterFactoryBean.setUnauthorizedUrl("/403");
 
         Map<String, String> filterRuleMap = new HashMap<String, String>();
+        filterRuleMap.put("/easyui/**", "anon");
         filterRuleMap.put("/**", "jwt");
         filterRuleMap.put("/403", "anon");
         filterRuleMap.put("/index", "anon");
         filterRuleMap.put("/login", "anon");
+        filterRuleMap.put("/register", "anon");
+
         filterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return filterFactoryBean;
     }

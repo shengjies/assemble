@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sj.login.ser.mapper.SerMapper">
+    <!--分页查询服务器信息-->
+    <select id="list" resultType="com.sj.login.ser.domain.Ser">
+        SELECT * FROM tab_service limit #{page},#{rows};
+    </select>
+    <!--统计总数-->
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*) FROM tab_service;
+    </select>
+    <!--添加服务器信息-->
+    <insert id="add">
+        INSERT INTO `jg`.`tab_service`(`sname`,`sip`,`spath`,`max_num`,`remark`,`create_time`,`spwd`)
+        VALUES(#{sname},#{sip},#{spath},#{max_num},#{remark},now(),#{spwd});
+    </insert>
+    <!--修改服务器信息-->
+    <update id="edit">
+        UPDATE `tab_service`
+            SET
+            `sname` = #{sname},
+            `sip` = #{sip},
+            `spath` = #{spath},
+            `max_num` = #{max_num},
+            `remark` = #{remark}
+            WHERE `id` = #{id};
+
+    </update>
+    <!--删除服务器信息-->
+    <delete id="del">
+        delete from tab_service where `id` = #{id};
+    </delete>
+    <!--查询其中一台未注册满的服务器信息-->
+    <select id="selectSer" resultType="com.sj.login.ser.domain.Ser">
+        SELECT * FROM jg.tab_service where max_num &gt; suser_num order by create_time asc  limit 1;
+    </select>
+    <!--修改服务器用户数量-->
+    <update id="editNum">
+        update tab_service set suser_num = suser_num + 1 where id = #{id};
+    </update>
+</mapper>

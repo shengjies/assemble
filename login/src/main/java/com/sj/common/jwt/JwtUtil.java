@@ -1,7 +1,7 @@
 package com.sj.common.jwt;
 
 import com.alibaba.fastjson.JSON;
-import com.sj.login.domain.User;
+import com.sj.login.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -32,7 +32,7 @@ public static final String CLAIM_KEY_USER="sub";
      * @return
      */
     public static Date getExpirationDate(){
-        return new Date(System.currentTimeMillis()+60*1000);
+        return new Date(System.currentTimeMillis()+60*60*1000);
     }
 
     /**

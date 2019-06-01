@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sj.login.company.mapper.CompanyMapper">
+    <!--分页查询公司信息-->
+    <select id="list" resultType="com.sj.login.company.domain.Company">
+        SELECT * FROM tab_company limit #{page},#{rows};
+    </select>
+    <!--统计总数-->
+    <select id="count" resultType="java.lang.Integer">
+        SELECT count(*) FROM tab_company
+    </select>
+    <!--添加公司信息-->
+    <insert id="add" keyProperty="id" useGeneratedKeys="true">
+      INSERT INTO `jg`.`tab_company`(`cname`,`sid`,`iso_path`,`iso`,`create_time`)
+      VALUES(#{cname},#{sid},#{iso_path},#{iso},now());
+    </insert>
+    <!--修改公司信息-->
+    <update id="edit">
+        UPDATE `tab_company`
+        SET
+        `cname` = #{cname},
+        `iso_path` = #{iso_path}
+        WHERE `id` = #{id};
+    </update>
+    <!--删除公司信息-->
+    <delete id="del">
+        delete from tab_company WHERE `id` = #{id};
+    </delete>
+</mapper>

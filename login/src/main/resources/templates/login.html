@@ -1,29 +1,93 @@
 <!DOCTYPE html>
-<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>登录</title>
+    <link th:href="@{/easyui/themes/default/easyui.css}" rel="stylesheet">
+    <link th:href="@{/easyui/themes/icon.css}" rel="stylesheet">
+    <link th:href="@{/easyui/themes/color.css}" rel="stylesheet">
 </head>
 <body>
-    <div style="margin:100px auto ;padding:20px 10px;
-    text-align:center;width: 500px;box-shadow: 2px 2px 10px #000000;border-radius: 5px;">
-        <h3>欢迎登录架构测试平台</h3>
-        <span style="color: red" th:utext="${msg}" ></span>
-        <form method="post" action="/login">
-            <div style="margin-top: 10px; ">
-                <label>
-                    用户名:<input name="username" type="text" required>
-                </label>
-            </div>
-            <div style="margin-top: 10px;">
-                <label>
-                    密 码:<input name="pwd" type="password" required>
-                </label>
-            </div>
-            <div style="margin-top: 10px;">
-                <input type="submit" value="登录">
-            </div>
-        </form>
-    </div>
+<div class="easyui-window" title="登录" style="width:300px;height:200px;text-align: center"
+     data-options="iconCls:'icon-man',modal:true,collapsible:false,minimizable:false,maximizable:false,closable:false">
+    <form id="login-form" method="post" style="margin-top: 15px">
+        <div>
+            <label for="name">用户名:</label>
+            <input class="easyui-validatebox" id="name"
+                   type="text" name="username" data-options="required:true"/>
+        </div>
+        <div style="margin-top: 15px">
+            <label for="pwd">密 码:</label>
+            <input class="easyui-validatebox" type="password" id="pwd"
+                   name="pwd" data-options="required:true"/>
+        </div>
+        <div style="margin-top: 15px">
+            <a href="javascript:void(0)" onclick="toRegister()" class="easyui-linkbutton">注册</a>
+            &nbsp;&nbsp;&nbsp;
+            <a id="login" href="javascript:void(0)" onclick="toLogin()" class="easyui-linkbutton">登录</a>
+        </div>
+    </form>
+</div>
+
+<script th:src="@{/easyui/jquery.min.js}" type="text/javascript"></script>
+<script th:src="@{/easyui/jquery.easyui.min.js}" type="text/javascript"></script>
+<script th:src="@{/easyui/easyui-lang-zh_CN.js}" type="text/javascript"></script>
+<script type="text/javascript">
+
+    function toLogin() {
+        $('#login-form').form('submit', {
+            url: "/login",
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (data) {
+                var data_json = eval('(' + data + ')');
+                if (data_json.code == 1) {
+                    var form = document.createElement("form");
+                    form.style.display ="none";
+                    form.action = "http://localhost/main";
+                    form.method = "post";
+                    document.body.appendChild(form);
+                    var input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "token";
+                    input.value = data_json.data;
+                    form.appendChild(input);
+                    form.submit();
+                    form.remove();
+                } else {
+                    $.messager.alert('提示', data_json.msg);
+                }
+            }
+        });
+    }
+    function toRegister() {
+        $('#login-form').form('submit', {
+            url: "/register",
+            onSubmit: function () {
+                return $(this).form('validate');
+            },
+            success: function (data) {
+                var data_json = eval('(' + data + ')');
+                if (data_json.code == 1) {
+                    var form = document.createElement("form");
+                    form.style.display ="none";
+                    form.action = data_json.path+'/main';
+                    form.method = "post";
+                    document.body.appendChild(form);
+                    var input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "token";
+                    input.value = data_json.token;
+                    form.appendChild(input);
+                    form.submit();
+                    form.remove();
+                } else {
+                    $.messager.alert('提示', data_json.msg);
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>

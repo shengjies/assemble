@@ -2,7 +2,7 @@ package com.sj.common.jwt.filter;
 
 import com.sj.common.jwt.JwtToken;
 import com.sj.common.jwt.JwtUtil;
-import com.sj.login.domain.User;
+import com.sj.login.user.domain.User;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.util.StringUtils;
 
@@ -23,7 +23,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         HttpServletRequest req = (HttpServletRequest) request;
         String token = req.getParameter("token");
         if(StringUtils.isEmpty(token)){
-            return false;
+            token = req.getHeader("token");
+            if(StringUtils.isEmpty(token)){
+                return false;
+            }
         }
         User u = JwtUtil.getUserByToken(token);
         if(u == null){
@@ -36,6 +39,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest req = (HttpServletRequest) request;
         String token = req.getParameter("token");
+        if(StringUtils.isEmpty(token)){
+            token = req.getHeader("token");
+        }
         JwtToken jwtToken = new JwtToken(token);
         getSubject(request, response).login(jwtToken);
         return true;
@@ -48,20 +54,20 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                return executeLogin(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
-                response401(request, response);
+                responseindex(request, response);
             }
         }
-        response401(request, response);
+        responseindex(request, response);
         return false;
     }
 
     /**
      * 将非法请求跳转到 /401
      */
-    private void response401(ServletRequest req, ServletResponse resp) {
+    private void responseindex(ServletRequest req, ServletResponse resp) {
         try {
             HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
-            httpServletResponse.sendRedirect("/403");
+            httpServletResponse.sendRedirect("/index");
         } catch (IOException e) {
             e.printStackTrace();
         }
