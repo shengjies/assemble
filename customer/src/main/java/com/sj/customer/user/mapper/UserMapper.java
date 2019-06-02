@@ -1,6 +1,6 @@
-package com.sj.customer.mapper;
+package com.sj.customer.user.mapper;
 
-import com.sj.customer.domain.User;
+import com.sj.customer.user.domain.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,13 +28,13 @@ public interface UserMapper {
      * @param rows 页面大小
      * @return
      */
-    List<User> list(@Param("page") int page, @Param("rows") int rows);
+    List<User> list(@Param("page") int page, @Param("rows") int rows,@Param("companyId")int companyId);
 
     /**
      * 统计总数
      * @return
      */
-    int count();
+    int count(@Param("companyId")int companyId);
 
     /**
      * 添加用户信息

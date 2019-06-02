@@ -1,5 +1,4 @@
-package com.sj.login.company.domain;
-
+package com.sj.customer.company.demain;
 
 public class Company {
     private int id;
@@ -64,5 +63,18 @@ public class Company {
 
     public void setSpwd(String spwd) {
         this.spwd = spwd;
+    }
+
+    @Override
+    public String toString() {
+        return "Company{" +
+                "id=" + id +
+                ", cname='" + cname + '\'' +
+                ", sid=" + sid +
+                ", iso_path='" + iso_path + '\'' +
+                ", iso='" + iso + '\'' +
+                ", create_time='" + create_time + '\'' +
+                ", spwd='" + spwd + '\'' +
+                '}';
     }
 }

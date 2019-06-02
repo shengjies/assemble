@@ -1,8 +1,9 @@
-package com.sj.customer.service;
+package com.sj.customer.user.service;
 
+import com.sj.common.jwt.JwtUtil;
 import com.sj.common.web.AjaxResult;
-import com.sj.customer.domain.User;
-import com.sj.customer.mapper.UserMapper;
+import com.sj.customer.user.domain.User;
+import com.sj.customer.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +39,10 @@ public class UserServiceImpl implements IUserService {
      * @param rows 页面大小
      * @return
      */
-    public AjaxResult list(int page, int rows) {
-        List<User> users = userMapper.list((page -1)*rows,rows);
-        return AjaxResult.tableData(userMapper.count(),users);
+    public AjaxResult list(int page, int rows,String token) {
+        User user = JwtUtil.getUserByToken(token);
+        List<User> users = userMapper.list((page -1)*rows,rows,user.getCompany_id());
+        return AjaxResult.tableData(userMapper.count(user.getCompany_id()),users);
     }
 
     /**
@@ -61,5 +63,15 @@ public class UserServiceImpl implements IUserService {
      */
     public int del(int id) throws Exception {
         return userMapper.del(id);
+    }
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    public int add(User user) throws Exception {
+        return userMapper.add(user);
     }
 }

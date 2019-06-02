@@ -1,4 +1,4 @@
-package com.sj.customer.domain;
+package com.sj.customer.user.domain;
 
 public class User {
     private int id;
@@ -64,5 +64,18 @@ public class User {
 
     public void setSpath(String spath) {
         this.spath = spath;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", pwd='" + pwd + '\'' +
+                ", sign=" + sign +
+                ", company_id=" + company_id +
+                ", create_time='" + create_time + '\'' +
+                ", spath='" + spath + '\'' +
+                '}';
     }
 }

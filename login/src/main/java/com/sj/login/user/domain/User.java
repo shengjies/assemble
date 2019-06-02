@@ -7,7 +7,6 @@ public class User {
     private int sign;
     private int company_id;
     private String create_time;
-
     private String spath;//访问路径
 
     public int getId() {

@@ -63,11 +63,7 @@ public class LoginController {
     public AjaxResult register(User user)
     {
         try {
-            User u = userService.register(user);
-            Map<String,Object> map = new HashMap<String, Object>();
-            map.put(JwtUtil.CLAIM_KEY_USER, JSON.toJSONString(u));
-            String token = JwtUtil.getToken(map);
-            return AjaxResult.register(u.getSpath(),token);
+            return userService.register(user);
         }catch (Exception e){
             e.printStackTrace();
         }

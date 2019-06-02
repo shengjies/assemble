@@ -1,8 +1,10 @@
 package com.sj.common.jwt.filter;
 
+
 import com.sj.common.jwt.JwtToken;
 import com.sj.common.jwt.JwtUtil;
-import com.sj.customer.domain.User;
+import com.sj.common.utils.PathUtils;
+import com.sj.customer.user.domain.User;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.util.StringUtils;
 
@@ -67,7 +69,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     private void responseindex(ServletRequest req, ServletResponse resp) {
         try {
             HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
-            httpServletResponse.sendRedirect("/index");
+            httpServletResponse.sendRedirect(PathUtils.path);
         } catch (IOException e) {
             e.printStackTrace();
         }

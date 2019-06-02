@@ -1,7 +1,7 @@
-package com.sj.customer.service;
+package com.sj.customer.user.service;
 
 import com.sj.common.web.AjaxResult;
-import com.sj.customer.domain.User;
+import com.sj.customer.user.domain.User;
 
 /**
  * 用户操作信息
@@ -26,7 +26,7 @@ public interface IUserService {
      * @param rows 页面大小
      * @return
      */
-    AjaxResult list(int page, int rows);
+    AjaxResult list(int page, int rows,String token);
 
     /**
      * 修改用户信息
@@ -43,4 +43,12 @@ public interface IUserService {
      * @throws Exception
      */
     int del(int id) throws Exception;
+
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     * @throws Exception
+     */
+    int add(User user) throws Exception;
 }

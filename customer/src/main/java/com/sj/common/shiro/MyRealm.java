@@ -2,8 +2,8 @@ package com.sj.common.shiro;
 
 import com.sj.common.jwt.JwtToken;
 import com.sj.common.jwt.JwtUtil;
-import com.sj.customer.domain.User;
-import com.sj.customer.service.IUserService;
+import com.sj.customer.user.domain.User;
+import com.sj.customer.user.service.IUserService;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

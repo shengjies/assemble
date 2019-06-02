@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+</head>
+<body>
+<div id="jg_user_grid_toolbar">
+    <table style="margin-top: 10px">
+        <tr>
+            <td>
+                &nbsp;<a href="javascript:User.userGridQuery()" class="easyui-linkbutton" plain="true" data-options="iconCls:'icon-search',plain:true">查询</a>
+                <a id="edit_user" href="javascript:User.userOpenEdit()" class="easyui-linkbutton"
+                   data-options="iconCls:'icon-edit',plain:true">修改</a>
+                <a id="del_user" href="javascript:User.userGridDel()" class="easyui-linkbutton"
+                   data-options="iconCls:'icon-remove',plain:true">删除</a>
+
+            </td>
+        </tr>
+    </table>
+</div>
+<table id="jg_user_grid" ></table>
+
+<div id="jg_edit_user_panel" class="easyui-window"
+     data-options="closed:true,modal:true,title:'修改用户信息',
+     minimizable:false,maximizable:false,collapsible:false,resizable:false"
+     style="background: #fafafa; width: 400px">
+
+    <form id="jg_edit_user_form" method="post"
+          style="padding-left: 20px; padding-top: 30px;">
+        <table style="font-size: 13px; font-family: '宋体'">
+
+            <tr>
+                <td align="right">
+                    <strong>用户名称:</strong>
+                </td>
+                <td align="left">
+                    <input class="easyui-textbox" type="text" id="edit_user_name" name="username"
+                           data-options="required:true"/>
+                    <input name="id" hidden>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    <strong>用户密码:</strong>
+                </td>
+                <td align="left">
+                    <input class="easyui-textbox" type="text" id="edit_user_pwd" name="pwd"
+                           data-options="required:true"/>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><a href="javascript:User.userGirdEdit()"
+                                                  class="easyui-linkbutton"
+                                                  data-options="iconCls:'icon-save',plain:true"><strong>保存</strong></a>
+                    <a href="javascript:void(0)"
+                       onclick="javascript:$('#jg_edit_user_panel').window('close');"
+                       class="easyui-linkbutton"
+                       data-options="iconCls:'icon-cancel',plain:true"><strong>关闭</strong></a></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript" th:inline="javascript">
+    $(function () {
+        $(document).keydown(function (e) {
+            if(e.keyCode==13){
+                User.userGridQuery();
+            }
+        })
+        $('#jg_user_grid').datagrid({
+            url:'u/list?token='+[[${token}]],
+            toolbar:'#jg_user_grid_toolbar',
+            autoRowHeight:true,
+            nowrap:false,
+            rownumbers:true,
+            singleSelect:true,
+            selectOnCheck:true,
+            pagination:true,
+            pageSize:50,
+            fitColumns:true,
+            fit:true,
+            striped:true,
+            method:'post',
+            columns:[
+                [
+                    {field:'id',title:'ID',width:15,align:'center'},
+                    {field:'username',title:'用户名',width:35,align:'center'},
+                    {field:'pwd',title:'密码',width:35,align:'center'},
+                    {field:'company_id',title:'所属公司',width:35,align:'center'},
+                    {field:'create_time',title:'创建时间',width:35,align:'center'}
+                ]
+            ]
+        });
+    });
+    var User={
+        userGridQuery:function () {
+            $('#jg_user_grid').datagrid('load');
+        },
+        userOpenEdit:function () {
+            var row = $("#jg_user_grid").datagrid("getSelected");
+            if (row == null) {
+                $.messager.alert("提示","请选择行...");
+                return;
+            }
+            $("#jg_edit_user_form").form('load', row);
+            $("#jg_edit_user_panel").window('open');
+        },
+        userGirdEdit:function () {
+            $("#jg_edit_user_form").form('submit', {
+                url: '/u/edit?token='+[[${token}]],
+                onSubmit: function () {
+                    return $(this).form('validate');
+                },
+                success: function (data) {
+                    var data_json = eval('(' + data + ')');
+                    if (data_json.code == 0) {
+                        $.messager.alert("提示","操作异常,稍后重试..")
+                    } else {
+                        $.messager.alert("提示",'操作成功...');
+                        $('#jg_edit_user_panel').window('close');
+                        $('#jg_user_grid').datagrid('reload');
+                    }
+                }
+            });
+        },
+        userGridDel:function () {
+            var row = $("#jg_user_grid").datagrid("getSelected");
+            if (row == null) {
+                $.messager.alert("提示","请选择行...");
+                return;
+            }
+            $.messager.confirm("提示","确定删除吗?",function (r) {
+                if(r){
+                    $.post("/u/del", {id: row.id}, function (data) {
+                        if (data.code == 0) {
+                            $.messager.alert("提示","操作异常,稍后重试..")
+                        }
+                        else {
+                            $.messager.alert("提示",'操作成功...');
+                            $('#jg_user_grid').datagrid('reload');
+                        }
+                    }, "json");
+                }
+            });
+        }
+    }
+</script>
+</body>
+</body>
+</html>

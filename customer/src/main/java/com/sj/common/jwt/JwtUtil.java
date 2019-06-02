@@ -1,7 +1,7 @@
 package com.sj.common.jwt;
 
 import com.alibaba.fastjson.JSON;
-import com.sj.customer.domain.User;
+import com.sj.customer.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

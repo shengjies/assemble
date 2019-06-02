@@ -1,4 +1,4 @@
-package com.sj.customer.controller;
+package com.sj.customer.user.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

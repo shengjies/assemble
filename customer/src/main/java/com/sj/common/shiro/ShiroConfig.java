@@ -2,6 +2,7 @@ package com.sj.common.shiro;
 
 
 import com.sj.common.jwt.filter.JwtFilter;
+import com.sj.common.utils.PathUtils;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
@@ -17,7 +18,7 @@ import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
 
-//@Configuration
+@Configuration
 public class ShiroConfig {
 
     @Bean("securityManager")
@@ -41,15 +42,12 @@ public class ShiroConfig {
         filterFactoryBean.setFilters(filterMap);
 
         filterFactoryBean.setSecurityManager(securityManager);
-        filterFactoryBean.setUnauthorizedUrl("/403");
+        filterFactoryBean.setUnauthorizedUrl(PathUtils.path);
 
         Map<String, String> filterRuleMap = new HashMap<String, String>();
         filterRuleMap.put("/easyui/**", "anon");
         filterRuleMap.put("/**", "jwt");
-        filterRuleMap.put("/403", "anon");
-        filterRuleMap.put("/login", "anon");
-        filterRuleMap.put("/register", "anon");
-
+        filterRuleMap.put("/api/**", "anon");
         filterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return filterFactoryBean;
     }

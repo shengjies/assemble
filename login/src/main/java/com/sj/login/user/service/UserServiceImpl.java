@@ -1,12 +1,18 @@
 package com.sj.login.user.service;
 
+import com.alibaba.fastjson.JSON;
 import com.sj.common.web.AjaxResult;
+import com.sj.login.company.api.CompanyApi;
 import com.sj.login.company.domain.Company;
 import com.sj.login.company.mapper.CompanyMapper;
 import com.sj.login.ser.domain.Ser;
 import com.sj.login.ser.mapper.SerMapper;
+import com.sj.login.user.api.UserApi;
 import com.sj.login.user.domain.User;
 import com.sj.login.user.mapper.UserMapper;
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +45,7 @@ public class UserServiceImpl implements IUserService {
      * @throws Exception
      */
     @Transactional
-    public User register(User user) throws Exception {
+    public AjaxResult register(User user) throws Exception {
         //查询未注册满的服务器
         Ser ser = serMapper.selectSer();
         if(ser == null)throw new Exception("无可用服务器");
@@ -49,15 +55,47 @@ public class UserServiceImpl implements IUserService {
         company.setCname("公司");
         company.setIso(iso);
         company.setSid(ser.getId());
+        company.setSpwd(ser.getSpwd());
         companyMapper.add(company);
         company.setCname("公司"+company.getId());
         companyMapper.edit(company);
-        //注册用户信息
-        user.setCompany_id(company.getId());
-        user.setSpath(ser.getSpath());
-        userMapper.add(user);
-        serMapper.editNum(ser.getId());
-        return user;
+        try {
+            CompanyApi companyApi = Feign.builder()
+                    .encoder(new GsonEncoder())
+                    .decoder(new GsonDecoder())
+                    .target(CompanyApi.class,ser.getSpath());
+            AjaxResult result = companyApi.initCompany(company);
+            if(Double.parseDouble(result.get("code").toString())==0){
+                throw new Exception("公司注册失败...");
+            }
+
+        }catch (Exception e){
+            //删除对应公司信息
+            companyMapper.del(company.getId());
+            throw new Exception(e.getMessage());
+        }
+        try {
+            //注册用户信息
+            user.setCompany_id(company.getId());
+            user.setSpath(ser.getSpath());
+            userMapper.add(user);
+            UserApi userApi = Feign.builder()
+                    .encoder(new GsonEncoder())
+                    .decoder(new GsonDecoder())
+                    .target(UserApi.class,ser.getSpath());
+            AjaxResult res = userApi.init(user);
+            if(Double.parseDouble(res.get("code").toString())==0){
+                throw new Exception("用户注册失败...");
+            }
+            serMapper.editNum(ser.getId());
+            return res;
+        }catch (Exception e){
+            //删除公司信息
+            companyMapper.del(company.getId());
+            //删除用户信息
+            userMapper.del(user.getId());
+            throw new Exception(e.getMessage());
+        }
     }
 
     /**

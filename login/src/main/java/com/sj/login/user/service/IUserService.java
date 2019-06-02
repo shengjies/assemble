@@ -20,7 +20,7 @@ public interface IUserService {
      * @return
      * @throws Exception
      */
-    User register(User user) throws Exception;
+    AjaxResult register(User user) throws Exception;
 
     /**
      * 根据用户名称查询对应的用户信息

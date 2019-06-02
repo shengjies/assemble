@@ -1,8 +1,8 @@
-package com.sj.customer.controller;
+package com.sj.customer.user.controller;
 
 import com.sj.common.web.AjaxResult;
-import com.sj.customer.domain.User;
-import com.sj.customer.service.IUserService;
+import com.sj.customer.user.domain.User;
+import com.sj.customer.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +35,8 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping("/list")
-    public AjaxResult list(int page,int rows){
-       return  userService.list(page,rows);
+    public AjaxResult list(HttpServletRequest request,int page,int rows){
+       return  userService.list(page,rows,request.getParameter("token"));
     }
 
     /**
