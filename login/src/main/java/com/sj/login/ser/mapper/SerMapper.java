@@ -60,4 +60,18 @@ public interface SerMapper {
      * @throws Exception
      */
     int editNum(@Param("id")int id) throws Exception;
+
+    /**
+     * 根据编号和密码查询对应服务器信息
+     * @param id
+     * @return
+     */
+    Ser selectById(@Param("id")int id,@Param("spwd")String pwd);
+
+    /**
+     * 根据id查询对应服务器信息
+     * @param id
+     * @return
+     */
+    Ser selectSerById(@Param("id")int id);
 }

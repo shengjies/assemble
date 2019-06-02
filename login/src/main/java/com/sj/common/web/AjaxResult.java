@@ -56,6 +56,7 @@ public class AjaxResult extends HashMap<String,Object> {
         register.put("token", token);
         return register;
     }
+
     public static AjaxResult login(String path,String token,int sign){
         AjaxResult register = new AjaxResult();
         register.put("path", path);

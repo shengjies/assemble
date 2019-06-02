@@ -2,6 +2,7 @@ package com.sj.customer.company.mapper;
 
 import com.sj.customer.company.demain.Company;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 公司信息
@@ -15,4 +16,11 @@ public interface CompanyMapper {
      * @throws Exception
      */
     int add(Company company) throws Exception;
+
+    /**
+     * 查询对应公司
+     * @param id
+     * @return
+     */
+    Company selectById(@Param("id")int id);
 }

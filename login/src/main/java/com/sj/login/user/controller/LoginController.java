@@ -3,8 +3,12 @@ package com.sj.login.user.controller;
 import com.alibaba.fastjson.JSON;
 import com.sj.common.jwt.JwtUtil;
 import com.sj.common.web.AjaxResult;
+import com.sj.login.user.api.UserApi;
 import com.sj.login.user.domain.User;
 import com.sj.login.user.service.IUserService;
+import feign.Feign;
+import feign.gson.GsonDecoder;
+import feign.gson.GsonEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,14 +41,7 @@ public class LoginController {
     @ResponseBody
     @PostMapping("/login")
     public AjaxResult login(User user){
-        User u = userService.login(user);
-        if(u == null){
-            return AjaxResult.error(0,"用户名密码错误");
-        }
-        Map<String,Object> map = new HashMap<String, Object>();
-        map.put(JwtUtil.CLAIM_KEY_USER, JSON.toJSONString(u));
-        String token = JwtUtil.getToken(map);
-        return AjaxResult.success("登录成功",token);
+        return userService.login(user);
     }
 
     @RequestMapping("/main")

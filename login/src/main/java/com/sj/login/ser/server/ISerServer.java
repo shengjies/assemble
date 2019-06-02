@@ -36,4 +36,11 @@ public interface ISerServer {
      * @throws Exception
      */
     int del(int id)throws Exception;
+
+    /**
+     * 系统密码验证
+     * @param ser 服务信息
+     * @throws Exception 验证未通过抛出异常
+     */
+    void verificationSer(Ser ser) throws Exception;
 }

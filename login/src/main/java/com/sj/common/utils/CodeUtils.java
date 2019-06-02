@@ -29,11 +29,19 @@ public class CodeUtils {
     public static final int CODE_SYS_PWD = 3;
 
     public static final String CODE_SYS_PWD_MSG = "系统密码错误,请联系管理员";
+
     /**
      * 公司信息异常
      */
     public static final int CODE_COMPANY_ERROR = 4;
 
     public static final String CODE_COMPANY_ERROR_MSG = "公司信息异常，请联系管理员";
+
+    /**
+     * 服务器验证失败
+     */
+    public static final int CODE_SER_ERROR = 5;
+
+    public static final String CODE_SER_ERROR_MSG = "服务器验证失败，请联系管理员";
 
 }

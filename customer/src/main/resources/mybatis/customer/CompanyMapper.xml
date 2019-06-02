@@ -3,7 +3,11 @@
 <mapper namespace="com.sj.customer.company.mapper.CompanyMapper">
     <!--添加公司信息-->
     <insert id="add">
-        INSERT INTO `jg2`.`tab_company`(`id`,`cname`,`sid`,`iso_path`,`iso`,`create_time`,`spwd`)
+        INSERT INTO `tab_company`(`id`,`cname`,`sid`,`iso_path`,`iso`,`create_time`,`spwd`)
         VALUES(#{id},#{cname},#{sid},#{iso_path},#{iso},now(),#{spwd});
     </insert>
+    <!--根据id查询公司信息-->
+    <select id="selectById" resultType="com.sj.customer.company.demain.Company">
+        SELECT * FROM tab_company where id = #{id};
+    </select>
 </mapper>

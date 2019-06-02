@@ -26,4 +26,8 @@
     <delete id="del">
         delete from tab_company WHERE `id` = #{id};
     </delete>
+    <!--根据id查询对应公司-->
+    <select id="selectById" resultType="com.sj.login.company.domain.Company">
+        select * from tab_company where id = #{id};
+    </select>
 </mapper>

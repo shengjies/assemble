@@ -1,6 +1,8 @@
 package com.sj.login.user.service;
 
 import com.alibaba.fastjson.JSON;
+import com.sj.common.jwt.JwtUtil;
+import com.sj.common.utils.CodeUtils;
 import com.sj.common.web.AjaxResult;
 import com.sj.login.company.api.CompanyApi;
 import com.sj.login.company.domain.Company;
@@ -17,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -34,8 +38,41 @@ public class UserServiceImpl implements IUserService {
      * @param user 用户信息
      * @return
      */
-    public User login(User user) {
-        return userMapper.login(user);
+    public AjaxResult login(User user) {
+        User u = userMapper.login(user);
+        if(u == null){
+            return AjaxResult.error(0,"用户名密码错误");
+        }
+        if(u.getSign() == 0){
+            //查询用户所属公司
+            Company company = companyMapper.selectById(u.getCompany_id());
+            if(company == null)
+                return AjaxResult.error(CodeUtils.CODE_COMPANY_ERROR,CodeUtils.CODE_COMPANY_ERROR_MSG);
+            //查询对应服务器信息
+            Ser s = serMapper.selectSerById(company.getSid());
+            if(s == null)
+                return AjaxResult.error(CodeUtils.CODE_SER_ERROR,CodeUtils.CODE_SER_ERROR_MSG);
+            //客户登录
+            try {
+                UserApi userApi = Feign.builder()
+                        .encoder(new GsonEncoder())
+                        .decoder(new GsonDecoder())
+                        .target(UserApi.class,s.getSpath());
+               AjaxResult result = userApi.userLogin(u);
+                if (Double.parseDouble(result.get("code").toString()) != 1) {
+                    return result;
+                }
+                System.out.println(result);
+               return AjaxResult.login(s.getSpath(),result.get("data").toString(),u.getSign());
+            }catch (Exception e){
+                e.printStackTrace();
+                return AjaxResult.error(CodeUtils.CODE_SYS_ERROR,CodeUtils.CODE_SYS_ERROR_MSG);
+            }
+        }
+        Map<String,Object> map = new HashMap<String, Object>();
+        map.put(JwtUtil.CLAIM_KEY_USER, JSON.toJSONString(u));
+        String token = JwtUtil.getToken(map);
+        return AjaxResult.login("http://localhost/main",token,u.getSign());
     }
 
     /**

@@ -17,4 +17,13 @@ public interface UserApi {
     @RequestLine("POST /api/u/init")
     @Headers("Content-Type: application/json")
     AjaxResult init(User user);
+
+    /**
+     * 用户信息登录
+     * @param user 用户信息
+     * @return
+     */
+    @RequestLine("POST /login")
+    @Headers("Content-Type: application/json")
+    AjaxResult userLogin(User user);
 }

@@ -46,4 +46,11 @@ public interface CompanyMapper {
      * @return
      */
     int del(@Param("id")int id);
+
+    /**
+     * 根据id查询对应公司
+     * @param id
+     * @return
+     */
+    Company selectById(@Param("id")int id);
 }

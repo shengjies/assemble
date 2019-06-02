@@ -45,13 +45,17 @@
                 if (data_json.code == 1) {
                     var form = document.createElement("form");
                     form.style.display ="none";
-                    form.action = "http://localhost/main";
+                    if(data_json.sign==0) {
+                        form.action = data_json.path+"/main";
+                    }else{
+                        form.action = data_json.path;
+                    }
                     form.method = "post";
                     document.body.appendChild(form);
                     var input = document.createElement("input");
                     input.type = "hidden";
                     input.name = "token";
-                    input.value = data_json.data;
+                    input.value = data_json.token;
                     form.appendChild(input);
                     form.submit();
                     form.remove();

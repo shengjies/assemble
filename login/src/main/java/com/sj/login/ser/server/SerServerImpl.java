@@ -56,4 +56,15 @@ public class SerServerImpl implements ISerServer {
     public int del(int id) throws Exception {
         return serMapper.del(id);
     }
+
+    /**
+     * 系统密码验证
+     * @param ser 服务信息
+     * @throws Exception
+     */
+    public void verificationSer(Ser ser) throws Exception {
+        if(ser == null) throw new Exception("验证信息为空");
+        Ser s = serMapper.selectById(ser.getId(),ser.getSpwd());
+        if(s ==null) throw new Exception("验证失败");
+    }
 }

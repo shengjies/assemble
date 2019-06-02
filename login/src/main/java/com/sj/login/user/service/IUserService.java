@@ -12,7 +12,7 @@ public interface IUserService {
      * @param user 用户信息
      * @return
      */
-    User login(User user);
+    AjaxResult login(User user);
 
     /**
      * 用户注册

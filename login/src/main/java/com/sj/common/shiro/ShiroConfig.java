@@ -50,6 +50,7 @@ public class ShiroConfig {
         filterRuleMap.put("/index", "anon");
         filterRuleMap.put("/login", "anon");
         filterRuleMap.put("/register", "anon");
+        filterRuleMap.put("/api/**", "anon");
 
         filterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return filterFactoryBean;

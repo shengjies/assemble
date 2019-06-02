@@ -48,6 +48,7 @@ public class ShiroConfig {
         filterRuleMap.put("/easyui/**", "anon");
         filterRuleMap.put("/**", "jwt");
         filterRuleMap.put("/api/**", "anon");
+        filterRuleMap.put("/login", "anon");
         filterFactoryBean.setFilterChainDefinitionMap(filterRuleMap);
         return filterFactoryBean;
     }
