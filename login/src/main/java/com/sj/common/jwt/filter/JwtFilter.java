@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -21,12 +22,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest) request;
-        String token = req.getParameter("token");
-        if(StringUtils.isEmpty(token)){
-            token = req.getHeader("token");
-            if(StringUtils.isEmpty(token)){
-                return false;
+        Cookie[] cookies =  req.getCookies();
+        String token = null;
+        for (Cookie c : cookies) {
+            if(c.getName().equals("token")){
+                token = c.getValue();
             }
+        }
+        if(StringUtils.isEmpty(token)){
+            return false;
         }
         User u = JwtUtil.getUserByToken(token);
         if(u == null){
@@ -38,9 +42,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletRequest req = (HttpServletRequest) request;
-        String token = req.getParameter("token");
+        Cookie[] cookies =  req.getCookies();
+        String token = null;
+        for (Cookie c : cookies) {
+            if(c.getName().equals("token")){
+                token = c.getValue();
+            }
+        }
         if(StringUtils.isEmpty(token)){
-            token = req.getHeader("token");
+            return  false;
         }
         JwtToken jwtToken = new JwtToken(token);
         getSubject(request, response).login(jwtToken);

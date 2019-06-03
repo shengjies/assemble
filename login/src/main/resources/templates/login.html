@@ -43,22 +43,27 @@
             success: function (data) {
                 var data_json = eval('(' + data + ')');
                 if (data_json.code == 1) {
-                    var form = document.createElement("form");
-                    form.style.display ="none";
+                    localStorage.setItem("token",data_json.token)
+                    document.cookie ="token="+data_json.token;
+                    // var form = document.createElement("form");
+                    // form.style.display ="none";
+                    var url = data_json.path;
                     if(data_json.sign==0) {
-                        form.action = data_json.path+"/main";
-                    }else{
-                        form.action = data_json.path;
+                        url = data_json.path+"/main";
                     }
-                    form.method = "post";
-                    document.body.appendChild(form);
-                    var input = document.createElement("input");
-                    input.type = "hidden";
-                    input.name = "token";
-                    input.value = data_json.token;
-                    form.appendChild(input);
-                    form.submit();
-                    form.remove();
+                    window.location.href = url;
+                    // else{
+                    //     form.action = data_json.path;
+                    // }
+                    // form.method = "post";
+                    // document.body.appendChild(form);
+                    // var input = document.createElement("input");
+                    // input.type = "hidden";
+                    // input.name = "token";
+                    // input.value = data_json.token;
+                    // form.appendChild(input);
+                    // form.submit();
+                    // form.remove();
                 } else {
                     $.messager.alert('提示', data_json.msg);
                 }
