@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * 公司操作api
  */
@@ -22,8 +25,18 @@ public class CompanyApi {
      * @return
      */
     @RequestMapping("/init")
-    public AjaxResult initCompanyInfo(@RequestBody Company company){
+    public AjaxResult initCompanyInfo(@RequestBody Company company, HttpServletRequest request){
         try {
+            Cookie[] cookies = request.getCookies();
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++");
+            if(cookies != null){
+                System.out.println("cookie 不为空 ");
+                for (Cookie cookie : cookies) {
+                    System.out.println(cookie.getName()+"------------------"+cookie.getValue());
+                }
+            }else{
+                System.out.println("cookis 是null");
+            }
             companyServer.add(company);
             return AjaxResult.success();
         }catch (Exception e){

@@ -101,7 +101,7 @@ public class UserServiceImpl implements IUserService {
                     .encoder(new GsonEncoder())
                     .decoder(new GsonDecoder())
                     .target(CompanyApi.class,ser.getSpath());
-            AjaxResult result = companyApi.initCompany(company);
+            AjaxResult result = companyApi.initCompany(company,"DDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
             if(Double.parseDouble(result.get("code").toString())==0){
                 throw new Exception("公司注册失败...");
             }

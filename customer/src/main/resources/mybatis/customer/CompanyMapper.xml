@@ -10,4 +10,15 @@
     <select id="selectById" resultType="com.sj.customer.company.demain.Company">
         SELECT * FROM tab_company where id = #{id};
     </select>
+
+    <select id="selectall" resultType="com.sj.customer.company.demain.Company">
+      SELECT * FROM jg2.tab_company;
+    </select>
+
+
+
+
+
+
+
 </mapper>

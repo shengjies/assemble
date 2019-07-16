@@ -4,6 +4,8 @@ import com.sj.customer.company.demain.Company;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 公司信息
  */
@@ -23,4 +25,7 @@ public interface CompanyMapper {
      * @return
      */
     Company selectById(@Param("id")int id);
+
+    List<Company> selectall();
+
 }
