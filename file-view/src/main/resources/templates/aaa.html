@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="http://www.jq22.com/demo/jquery-2vm20150910/js/jqueryqr.js"></script>
+    <script src="http://www.jq22.com/demo/jquery-2vm20150910/js/qrcode.js"></script>
+</head>
+
+<body>
+<img id="imgLogo"
+     src="/1.png"  >
+<div id="ewm">
+    <div id="container" style="float: left;display: none" >
+        <canvas  width="400" height="400"></canvas>
+    </div>
+</div>
+<canvas id="canvas" width=300 height=300></canvas><br>
+<button onclick="print_voucher()">转换</button><br/>
+<button onclick="dayin()">打印</button><br/>
+<div id="ddddd">
+
+</div>
+<script>
+    $(function () {
+        var user ={id:1,name:'普通用户'};
+        $('#container').erweima({
+            fill:"#000",
+            mode: 4,
+            mSize:30,
+            text:JSON.stringify(user),
+            image: $("#imgLogo")[0]
+            // label:'欢迎使用'
+        });
+    })
+    $(function(){
+        var canvas=document.getElementById("canvas");
+        var ctx=canvas.getContext("2d");
+
+        ctx.fillStyle="gold";
+        ctx.strokeStyle="blue";
+        ctx.lineWidth=5;
+        ctx.rect(50,50,100,100);
+        ctx.fill();
+        ctx.stroke();
+
+    }); // end $(function(){});
+
+    function print_voucher(){
+        var ewmcanvas = $("#container").find("canvas")[0];
+        var headstr = "<html><head><title></title></head><body>";
+        var bodystr ="<img src='"+ewmcanvas.toDataURL()+"'/>";
+        var footstr = "</body>";
+        var win=window.open();
+        win.document.write(headstr+bodystr+footstr);
+        win.print();
+        win.location.reload();
+    }
+    function dayin(){
+        var userAgent = navigator.userAgent.toLowerCase(); //取得浏览器的userAgent字符串
+        if (userAgent.indexOf("trident") > -1){
+            alert("请使用google或者360浏览器打印");
+            return false;
+        }else if(userAgent.indexOf('msie')>-1){
+            var onlyChoseAlert = simpleAlert({
+                "content":"请使用Google或者360浏览器打印",
+                "buttons":{
+                    "确定":function () {
+                        onlyChoseAlert.close();
+                    }
+                }
+            })
+            alert("请使用google或者360浏览器打印");
+            return false;
+        }else{//其它浏览器使用lodop
+            var ewmcanvas = $("#container").find("canvas")[0];
+            var item ='<img src="'+ewmcanvas.toDataURL()+'"/>';
+            $("#ddddd").append(item);
+            var oldstr = document.body.innerHTML;
+            var headstr = "<html><head><title></title></head><body>";
+            var footstr = "</body>";
+            //此处id换为你自己的id
+            var printData = document.getElementById("ddddd").innerHTML; //获得 div 里的所有 html 数据
+            document.body.innerHTML = headstr+printData+footstr;
+            window.print();
+            document.body.innerHTML = oldstr;
+        }
+    }
+</script>
+</body>
+
+</html>

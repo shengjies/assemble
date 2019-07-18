@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>文件上传测试</title>
+    <style>
+        body {
+            display: -webkit-flex;
+            display: flex;
+            -webkit-justify-content: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+<div contenteditable id="imgNode" style="width: 800px;height: 500px; border:1px solid">
+</div>
+
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    document.addEventListener('paste', function (event) {
+        console.log(event)
+        var isChrome = false;
+        if ( event.clipboardData || event.originalEvent ) {
+            $("#imgNode").children().remove();
+            //not for ie11  某些chrome版本使用的是event.originalEvent
+            var clipboardData = (event.clipboardData || event.originalEvent.clipboardData);
+            if ( clipboardData.items ) {
+                // for chrome
+                var  items = clipboardData.items,
+                    len = items.length,
+                    blob = null;
+                isChrome = true;
+                //阻止默认行为即不让剪贴板内容在div中显示出来
+                event.preventDefault();
+
+                //在items里找粘贴的image,据上面分析,需要循环
+                for (var i = 0; i < len; i++) {
+                    if (items[i].type.indexOf("image") !== -1) {
+                        blob = items[i].getAsFile();
+                    }
+                }
+                if ( blob !== null ) {
+                    var blobUrl=URL.createObjectURL(blob);
+                    console.log("blobUrl:"+blobUrl)
+                    if(blobUrl !== null){
+                        $("#imgNode").append("<img style='width: 450px' src='"+blobUrl+"'/>");
+                    }
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        // event.target.result 即为图片的Base64编码字符串
+                        var base64_str = event.target.result
+                        //可以在这里写上传逻辑 直接将base64编码的字符串上传（可以尝试传入blob对象，看看后台程序能否解析）
+                        var b64 = base64_str.replace('data:image/png;base64,','');
+                        var binary = atob(b64);
+                        var array = [];
+                        for (var i = 0; i < binary.length; i++) {
+                            array.push(binary.charCodeAt(i));
+                        }
+                        var file = new Blob([new Uint8Array(array)], {type: 'image/png'});
+                        uploadImgFromPaste(file, 'paste', isChrome);
+                    }
+                    reader.readAsDataURL(blob);
+                }
+            } else {
+                console.log("else1")
+            }
+        } else {
+            console.log("eles2")
+        }
+    })
+
+    function uploadImgFromPaste (file, type, isChrome) {
+        var formData = new FormData();
+        formData.append('file', file);
+        $.ajax({
+            url:"http://127.0.0.1:8080/file/upload",
+            data: formData,
+            type: "post",
+            processData: false,
+            contentType: false,
+            beforeSend: function () {
+
+            },
+            success: function(result) {
+                console.log(result);
+            }
+        })
+        // var xhr = new XMLHttpRequest();
+        // xhr.open('POST', 'http://127.0.0.1:8080/file/upload');
+        // xhr.onload = function () {
+        //     if ( xhr.readyState === 4 ) {
+        //         if ( xhr.status === 200 ) {
+        //             console.log(xhr.responseText)
+        //         } else {
+        //             console.log( xhr.statusText );
+        //         }
+        //     };
+        // };
+        // xhr.onerror = function (e) {
+        //     console.log( xhr.statusText );
+        // }
+        // xhr.send(formData);
+    }
+</script>
+</body>
+</html>

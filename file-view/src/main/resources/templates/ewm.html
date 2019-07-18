@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>二维码</title>
+</head>
+<body>
+<div>
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="http://www.jq22.com/demo/jquery-2vm20150910/js/jqueryqr.js"></script>
+    <script src="http://www.jq22.com/demo/jquery-2vm20150910/js/qrcode.js"></script>
+
+    <img id="imgLogo"
+         src="http://172.16.30.55:88/profile/iso4_88/98233cb5eae44fe3bb9f3068b64d1831.jpg"  hidden>
+    <div id="ewm">
+        <div id="container" style="float: left">
+            <canvas width="400" height="400"></canvas>
+        </div>
+    </div>
+    <div id="img">
+        <img id="view-img">
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            var user ={id:1,name:'普通用户'};
+            $('#container').erweima({
+                fill:"#000",
+                mode: 4,
+                mSize:30,
+                text:JSON.stringify(user),
+                image: $("#imgLogo")[0]
+            });
+        })
+        // //从 canvas 提取图片 image
+        function convertCanvasToImage(canvas) {
+            //新Image对象，可以理解为DOM
+            var image = new Image();
+            try {
+                var base64 = canvas.toDataURL()
+
+                $("#view-img")[0].src = base64
+            } catch (err) {
+                console.warn('图片需同源')
+            }
+
+            return image;
+        }
+        //
+        // //获取网页中的canvas对象
+        var mycans=$('canvas')[0];
+        // //调用convertCanvasToImage函数将canvas转化为img形式
+        var img=convertCanvasToImage(mycans);
+        // console.log(img);
+        // //将img插入容器
+        // $('#img').append(img);
+        // $(document).ready(function () {
+        //     for (var i = 0;i< 3;i++){
+        //         var item ='<div id="container'+i+'" style="float: left">' +
+        //             '    <canvas width="400" height="400"></canvas>\n' +
+        //             '</div>';
+        //         $("#ewm").append(item);
+        //     }
+        //     for (var i=0;i<3;i++){
+        //         var user ={id:i,name:'普通用户'+i};
+        //         $('#container'+i).erweima({
+        //             fill:"#000",
+        //             mode: 4,
+        //             mSize:30,
+        //             text:JSON.stringify(user),
+        //             image: $("#imgLogo")[0]
+        //         });
+        //     }
+        // });
+        function dayin(){
+            // var img = document.getElementById("image"); /// get image element
+            // var canvas  = $("canvas")[0];  /// get canvas element
+            // console.log(canvas);
+            // img.src = canvas.toDataURL("image/png");
+            var userAgent = navigator.userAgent.toLowerCase(); //取得浏览器的userAgent字符串
+            if (userAgent.indexOf("trident") > -1){
+                alert("请使用google或者360浏览器打印");
+                return false;
+            }else if(userAgent.indexOf('msie')>-1){
+                var onlyChoseAlert = simpleAlert({
+                    "content":"请使用Google或者360浏览器打印",
+                    "buttons":{
+                        "确定":function () {
+                            onlyChoseAlert.close();
+                        }
+                    }
+                })
+                alert("请使用google或者360浏览器打印");
+                return false;
+            }else{//其它浏览器使用lodop
+                // var img = document.getElementById("image"); /// get image element
+                // var canvas  = document.getElementsByTagName("canvas")[0];  /// get canvas element
+                // img.src = canvas.toDataURL();
+                var oldstr = document.body.innerHTML;
+                var headstr = "<html><head><title></title></head><body>";
+                var footstr = "</body>";
+                //此处id换为你自己的id
+                var printData = document.getElementById("img").innerHTML; //获得 div 里的所有 html 数据
+                document.body.innerHTML = headstr+printData+footstr;
+                window.print();
+                document.body.innerHTML = oldstr;
+            }
+        }
+    </script>
+</div>
+<div style="clear: both"></div>
+<div>
+    <button onclick="dayin()">打印</button>
+</div>
+</body>
+</html>
